@@ -3,6 +3,10 @@ if !exists('g:instant_markdown_slow')
     let g:instant_markdown_slow = 0
 endif
 
+if !exists('g:instant_markdown_port')
+    let g:instant_markdown_port = 8090
+endif
+
 if !exists('g:instant_markdown_autostart')
     let g:instant_markdown_autostart = 1
 endif
@@ -61,12 +65,13 @@ endfu
 
 function! s:refreshView()
     let bufnr = expand('<bufnr>')
-    call s:systemasync("curl -X PUT -T - http://localhost:8090",
+    call s:systemasync("curl -X PUT -T - http://localhost:".g:instant_markdown_port,
                 \ s:bufGetLines(bufnr))
 endfu
 
 function! s:startDaemon(initialMDLines)
     let env = ''
+    let $INSTANT_MARKDOWN_PORT=g:instant_markdown_port
     if g:instant_markdown_open_to_the_world
         let env .= 'INSTANT_MARKDOWN_OPEN_TO_THE_WORLD=1 '
     endif
@@ -97,7 +102,7 @@ function! s:popBuffer(bufnr)
 endfu
 
 function! s:killDaemon()
-    call s:systemasync("curl -s -X DELETE http://localhost:8090", [])
+    call s:systemasync("curl -s -X DELETE http://localhost:".g:instant_markdown_port, [])
 endfu
 
 function! s:bufGetLines(bufnr)
