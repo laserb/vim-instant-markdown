@@ -72,6 +72,9 @@ endfu
 function! s:startDaemon(initialMDLines)
     let env = ''
     let $INSTANT_MARKDOWN_PORT=g:instant_markdown_port
+    if exists('g:instant_markdown_browser')
+        let $INSTANT_MARKDOWN_BROWSER=g:instant_markdown_browser
+    endif
     if g:instant_markdown_open_to_the_world
         let env .= 'INSTANT_MARKDOWN_OPEN_TO_THE_WORLD=1 '
     endif
